@@ -9,11 +9,12 @@ for i, l in enumerate(lines):
     for ii in range(9):
         stacks[ii].append(l[ii*4 + 1])
 
+# reverse stacks and remove empty characters
 for j in range(len(stacks)):
     stacks[j] = [e for e in reversed(stacks[j]) if e.strip()]
 
-for l in lines[i + 2:]:
-    # process moves
+# process moves
+for l in lines[i+2:]:
     n, src, dest = [int(e) for e in l.split()[1::2]]
 
     # part 1 logic
