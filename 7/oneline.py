@@ -5,17 +5,14 @@
 #   3. `ls` is only called once for each directory
 
 # merged
-print(
-    *(lambda lines, sizes: (
+print(*(
+    lambda lines, sizes: (
         # part 1
         sum(s for s in sizes if s <= 100000),
         # part 2
-        min(s for s in sizes if s >= (3e7 - (7e7 - sum(
-            map(
-                lambda l: int(l.split()[0]),
-                filter(lambda l: l[0].isdigit(), lines)
-            )
-        ))))
+        min(s for s in sizes if s >= 3e7 - 7e7 + sum(
+            int(l.split()[0]) for l in lines if l[0].isdigit()
+        ))
     ))(*(
         # generate list with total size of each directory
         lambda lines: (lines, list(map(
