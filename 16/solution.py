@@ -32,30 +32,15 @@ def transform_graph():
     return graph
 
 
-valves = {}
-tunnels = {}
-with open('input') as f:
-    for l in f:
-        match = re.match(
-            'Valve (\w+) has flow rate=(\d+); tunnel[s]? lead[s]? to valve[s]? (\w+(, \w+)*)',
-            l
-        )
-
-        v, fr, links, _ = match.groups()
-        if int(fr):
-            valves[v] = int(fr)
-        tunnels[v] = links.split(', ')
-
-graph = transform_graph()
-
 ## Part 1
 
 # key: (location, inactive valves, time left)
 # value: maximum amount of flow that can be added between now and the end of the
 # available time
-memo = {}
 
 def subprob_1(location, inactive, time_left):
+    global memo
+
     if time_left <= 0 or len(inactive) == 0:
         return 0
 
@@ -78,16 +63,15 @@ def subprob_1(location, inactive, time_left):
     memo[key] = best
     return best
 
-print(subprob_1('AA', frozenset(valves.keys()), 30))
-
 
 ## Part 2
-memo = {}
 
 # actors: tuple of (location, time_left) tuples representing all possible movers
 # space/time: K * M**2 * S2(M, 2)
 def subprob_2(actors, inactive):
-    if all([a[1] <= 0 for a in actors]) or len(inactive) == 0:
+    global memo
+
+    if len(inactive) == 0 or all([a[1] <= 0 for a in actors]):
         return 0
 
     key = hash((actors, inactive))
@@ -114,4 +98,30 @@ def subprob_2(actors, inactive):
     memo[key] = best
     return best
 
-print(subprob_2((('AA', 26), ('AA', 26)), frozenset(valves.keys())))
+
+def main():
+    global valves, tunnels, graph
+    with open('input') as f:
+        for l in f:
+            match = re.match(
+                'Valve (\w+) has flow rate=(\d+); tunnel[s]? lead[s]? to valve[s]? (\w+(, \w+)*)',
+                l
+            )
+
+            v, fr, links, _ = match.groups()
+            if int(fr):
+                valves[v] = int(fr)
+            tunnels[v] = links.split(', ')
+
+    graph = transform_graph()
+    #print(subprob_1('AA', frozenset(valves.keys()), 30))
+    print(subprob_2((('AA', 26), ('AA', 26)), frozenset(valves.keys())))
+
+
+valves = {}
+tunnels = {}
+graph = {}
+memo = {}
+
+if __name__ == '__main__':
+    main()

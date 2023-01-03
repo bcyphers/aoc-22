@@ -49,9 +49,9 @@ def resolve_2(solved, unsolved, op, v1, v2):
         return [f] + solved[v1]
     elif type(solved[v2]) == list:
         return [f] + solved[v2]
-    else:
-        f = lambda a, b: eval('a %s b' % op)
-        return f(solved[v1], solved[v2])
+
+    f = lambda a, b: eval('a %s b' % op)
+    return f(solved[v1], solved[v2])
 
 
 def resolve_stack(funcs, x):
